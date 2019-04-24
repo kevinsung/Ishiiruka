@@ -500,8 +500,21 @@ void CEXISlippi::prepareFrameData(u8 *payload)
 
 	// If loading from queue, move on to the next replay if we have past endFrame
 	auto watchSettings = replayComm->current;
+	if (frameIndex == watchSettings.startFrame)
+	{
+		std::cout << "[GAME_START]" << std::endl;
+	}
+
+	// This is exactly where the Game! text shows, not when the game really finishes.
+	// Should actually wait 114 frames to send the signal in order to be completely accurate.
+	if (frameIndex == watchSettings.endFrame - 124)
+	{
+		std::cout << "[GAME!]" << std::endl;
+	}
+
 	if (frameIndex > watchSettings.endFrame)
 	{
+		std::cout << "[END_FRAME]" << std::endl;
 		INFO_LOG(EXPANSIONINTERFACE, "Killing game because we are past endFrame");
 		m_read_queue.push_back(FRAME_RESP_TERMINATE);
 		return;
@@ -585,6 +598,7 @@ void CEXISlippi::prepareFrameData(u8 *payload)
 
 		if (requestResultCode == FRAME_RESP_TERMINATE)
 		{
+			std::cout << "[LRAS]" << std::endl;
 			ERROR_LOG(EXPANSIONINTERFACE, "Game should terminate on frame %d [%X]", frameIndex, frameIndex);
 		}
 
