@@ -507,14 +507,14 @@ void CEXISlippi::prepareFrameData(u8 *payload)
 
 	// This is exactly where the Game! text shows, not when the game really finishes.
 	// Should actually wait 114 frames to send the signal in order to be completely accurate.
-	if (frameIndex == watchSettings.endFrame - 124)
+	if (frameIndex == watchSettings.endFrame)
 	{
-		std::cout << "[GAME!]" << std::endl;
+		std::cout << "[END_FRAME]" << std::endl;
 	}
 
 	if (frameIndex > watchSettings.endFrame)
 	{
-		std::cout << "[END_FRAME]" << std::endl;
+		std::cout << "[PAST_END_FRAME]" << std::endl;
 		INFO_LOG(EXPANSIONINTERFACE, "Killing game because we are past endFrame");
 		m_read_queue.push_back(FRAME_RESP_TERMINATE);
 		return;
